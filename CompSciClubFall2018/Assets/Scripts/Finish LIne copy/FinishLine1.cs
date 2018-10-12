@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FinishLine1 : MonoBehaviour {
-	public GameObject Lap;
+	public GameObject FinishLap;
 	public GameObject Halfway;
+	public GameObject LapCount;
+	public int LapNum;
 
 	void OnTriggerEnter(){
-		Lap.SetActive (true);
-		Halfway.SetActive (false);
+		LapNum++;
+		LapCount.GetComponent<Text> ().text = "" + LapNum;
+		FinishLap.SetActive (false);
+		Halfway.SetActive (true);
 	}
 }
