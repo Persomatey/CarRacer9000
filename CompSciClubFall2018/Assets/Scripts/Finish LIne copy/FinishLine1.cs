@@ -11,8 +11,8 @@ public class FinishLine1 : MonoBehaviour {
 
 	void OnTriggerEnter(){
 		LapNum++;
-		LapCount.GetComponent<Text> ().text = "" + LapNum;
 		FinishLap.SetActive (false);
 		Halfway.SetActive (true);
+		LapCount.GetComponent<Text> ().text = "" + LapNum;
 	}
 }
