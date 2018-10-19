@@ -368,23 +368,23 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 38290000
-    m_LastClickedID: 10552
-    m_ExpandedIDs: 2cf9ffff00000000
+    m_SelectedIDs: cc280000
+    m_LastClickedID: 10444
+    m_ExpandedIDs: b4f9ffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Missing Prefab
-      m_OriginalName: Missing Prefab
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 10582
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 7}
     m_SearchString: 
@@ -519,7 +519,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: ee240000
     m_LastClickedID: 9454
-    m_ExpandedIDs: 000000009e280000a8280000aa280000ba280000da280000ec280000fa28000004290000
+    m_ExpandedIDs: 000000000828000012280000142800002428000046280000582800006428000070280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -547,7 +547,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 45}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000009e280000a8280000aa280000ba280000da280000ec280000fa28000004290000
+    m_ExpandedIDs: 000000000828000012280000142800002428000046280000582800006428000070280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
