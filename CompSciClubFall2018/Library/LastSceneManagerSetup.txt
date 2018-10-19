@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Hunter-PlayerMovement.unity
+- path: Assets/Scenes/Dylan Finsh Line copy.unity
   isLoaded: 1
   isActive: 1
