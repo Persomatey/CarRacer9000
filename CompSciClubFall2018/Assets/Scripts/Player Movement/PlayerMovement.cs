@@ -19,19 +19,26 @@ public class PlayerMovement : MonoBehaviour
     public int howMuchCanTurn = 50; // How much we can allow the car to turn. Set with an initial value, but can be changed in-engine. 
     private int rotRightVeloc = 0;  // How fast the car is turning to the right. 
     private int rotLeftVeloc = 0;   // How fast the car is turning to the left. 
+    public float slidyness = 2;     // How much the car maintains lateral momentum when sliding
+    public float driftyness = 5;    // works similar to slidyness. driftyness should be greater than slidyness
+    public float frictionSpeedThreshold = 5; // How fast before the car starts to slide
     private float velocOfRight;     // The velocity the car is moving to the right of the car 
-    private float velocOfLeft;      // The velocity the car is moving to the right of the car 
+    private float velocOfLeft;      // The velocity the car is moving to the left of the car 
     private int lastAccel = 0;      // The ylast direction the car was going in 
     private bool isW;               // We'll set this bool to if the W key being hit soon 
     private bool isA;               // We'll set this bool to if the A key being hit soon 
     private bool isS;               // We'll set this bool to if the S key being hit soon 
     private bool isD;               // We'll set this bool to if the D key being hit soon
-    private bool isSpace;           // We'll set this to bool if the Space(handbrake) is pressed
+    private bool isSpace;           // We'll set this bool if the Space(handbrake) is pressed
+
+    public float debugVelocity;
 
     private void FixedUpdate()                                          // This function will be called every frame. 
     {
         velocOfRight = Vector3.Dot(ballRB.velocity, playerTr.right);    // Setting velocOfRight to whatever the velocity is to the right of the player 
         velocOfLeft = Vector3.Dot(ballRB.velocity, -playerTr.right);    // Setting velocOfLeft to whatever the velocity is to the left of the player 
+
+        debugVelocity = ballRB.velocity.magnitude;
 
         if (Input.GetKey("w"))                                          // If the W key is being pressed... 
         { isW = true; }                                                 // Set isW to true 
@@ -61,15 +68,7 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 1;                                              // Set the lastAccel to 1 (this will come into play if no keys are being hit) 
             ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                ballRB.AddForce(-playerTr.right * velocOfRight);        // Apply a force to the left equal to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                ballRB.AddForce(playerTr.right * velocOfLeft);          // Apply a force to the right equal to that velocity 
-            }
-
+            handleSliding(isSpace);
         }
 
 
@@ -80,14 +79,8 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 3;                                              // Set the lastAccel to 3 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
             ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                //ballRB.AddForce(-playerTr.right * velocOfRight/2);        // Apply a force to the left half to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                //ballRB.AddForce(playerTr.right * velocOfLeft/2);          // Apply a force to the right equal to that velocity 
-            }
+
+            handleSliding(isSpace);
         }
 
         else if (isA == true && isSpace == true)         //if (left and handbrake), run handbraking drift turn
@@ -97,14 +90,8 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 3;                                              // Set the lastAccel to 3 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
             //ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                //ballRB.AddForce(-playerTr.right * velocOfRight/2);        // Apply a force to the left half to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                //ballRB.AddForce(playerTr.right * velocOfLeft/2);          // Apply a force to the right equal to that velocity 
-            }
+
+            handleSliding(isSpace);
         }
 
         else if (isW == true && isD == true && isSpace == true)         //if (forward and right and handbrake), run handbraking drift turn
@@ -114,14 +101,8 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 4;                                              // Set the lastAccel to 4 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
             ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                //ballRB.AddForce(-playerTr.right * velocOfRight/2);        // Apply a force to the left half to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                //ballRB.AddForce(playerTr.right * velocOfLeft/2);          // Apply a force to the right half to that velocity 
-            }
+
+            handleSliding(isSpace);
         }
 
         else if (isD == true && isSpace == true)         //if (right and handbrake), run handbraking drift turn
@@ -130,15 +111,9 @@ public class PlayerMovement : MonoBehaviour
             rotLeftVeloc--;                                             // Decrement rotLeftVeloc 
             lastAccel = 4;                                              // Set the lastAccel to 4 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
-            //ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                //ballRB.AddForce(-playerTr.right * velocOfRight/2);        // Apply a force to the left half to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                //ballRB.AddForce(playerTr.right * velocOfLeft/2);          // Apply a force to the right half to that velocity 
-            }
+                                                                                        //ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+
+            handleSliding(isSpace);
         }
 
         else if ( isW == true && isA == true )                  // If isW is true and isA is true (forward and left), run this code 
@@ -149,14 +124,7 @@ public class PlayerMovement : MonoBehaviour
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
             ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                ballRB.AddForce(-playerTr.right * velocOfRight);        // Apply a force to the left equal to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                ballRB.AddForce(playerTr.right * velocOfLeft);          // Apply a force to the right equal to that velocity 
-            }
+            handleSliding(isSpace);
         }
         else if ( isW == true && isD == true)                   // If isW is true and isD is true (forward and right), run this code 
         {
@@ -168,14 +136,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                ballRB.AddForce(-playerTr.right * velocOfRight);        // Apply a force to the left equal to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                ballRB.AddForce(playerTr.right * velocOfLeft);          // Apply a force to the right equal to that velocity 
-            }
+            handleSliding(isSpace);
         }
         else if ( isS == true && isA == false && isD == false)  // If only isS is true and nothing else (backward only), run this code 
         {
@@ -184,14 +145,7 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 2;                                              // Set the lastAccel to 2 (this will come into play if no keys are being hit) 
             ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                ballRB.AddForce(-playerTr.right * velocOfRight);        // Apply a force to the left equal to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                ballRB.AddForce(playerTr.right * velocOfLeft);          // Apply a force to the right equal to that velocity 
-            }
+            handleSliding(isSpace);
         }
         else if ( isS == true && isA == true)                    // If isS is true and isA is true (backward and left), run this code 
         {
@@ -201,14 +155,7 @@ public class PlayerMovement : MonoBehaviour
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
             ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                ballRB.AddForce(-playerTr.right * velocOfRight);        // Apply a force to the left equal to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                ballRB.AddForce(playerTr.right * velocOfLeft);          // Apply a force to the right equal to that velocity 
-            }
+            handleSliding(isSpace);
         }
         else if ( isS == true && isD == true)                   // If isS is true and isD is true (backward and Right), run this code 
         {
@@ -218,14 +165,7 @@ public class PlayerMovement : MonoBehaviour
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
             ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
-            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
-            {
-                ballRB.AddForce(-playerTr.right * velocOfRight);        // Apply a force to the left equal to that velocity 
-            }
-            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
-            {
-                ballRB.AddForce(playerTr.right * velocOfLeft);          // Apply a force to the right equal to that velocity 
-            }
+            handleSliding(isSpace);
         }
         else                                                    // Lastly, if there are no buttons being pressed, run this code 
         {
@@ -261,5 +201,46 @@ public class PlayerMovement : MonoBehaviour
         {  rotLeftVeloc = howMuchCanTurn; }
         if (rotLeftVeloc < 0)                   // Every frame, make sure that rotLeftVeloc's value can't be less than 0. 
         { rotLeftVeloc = 0; }
+    }
+
+    public void handleSliding(bool handbrake)
+    {
+        if (!handbrake)                         // If the handbrake is not held down, the car will turn normally with normal slidyness
+        {
+            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
+            {
+                if (ballRB.velocity.magnitude > frictionSpeedThreshold) // If the car is faster than friction threshold, then activate sliding
+                {
+                    ballRB.AddForce(-playerTr.right * velocOfRight / slidyness);
+                }
+                else
+                {
+                    ballRB.AddForce(-playerTr.right * velocOfRight);        // Apply a force to the left equal to that velocity 
+                }
+            }
+            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
+            {
+                if (ballRB.velocity.magnitude > frictionSpeedThreshold) // If the car is faster than friction threshold, then activate sliding
+                {
+                    ballRB.AddForce(playerTr.right * velocOfLeft / slidyness);
+                }
+                else
+                {
+                    ballRB.AddForce(playerTr.right * velocOfLeft);        // Apply a force to the left equal to that velocity 
+                }
+            }
+        }
+
+        else                                               // if handbrake is held down
+        {
+            if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
+            {     
+                    ballRB.AddForce(-playerTr.right * velocOfRight / driftyness);
+            }
+            if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
+            {
+                    ballRB.AddForce(playerTr.right * velocOfLeft / driftyness);
+            }
+        }
     }
 }
