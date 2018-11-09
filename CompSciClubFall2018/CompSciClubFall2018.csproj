@@ -243,8 +243,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Finish LIne copy\FinishLine1.cs" />
-    <Compile Include="Assets\Scripts\Finish LIne copy\Halfwaypoint.cs" />
+    <Compile Include="Assets\Scripts\LapSystem\Finish LIne copy\FinishLine1.cs" />
+    <Compile Include="Assets\Scripts\LapSystem\Finish LIne copy\Halfwaypoint.cs" />
     <Compile Include="Assets\Scripts\Player Movement\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\Player Movement\CarModelMovement.cs" />
     <Compile Include="Assets\Scripts\Player Movement\PlayerMovement.cs" />
