@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody ballRB;        // To be populated with the ball's rigidbody in-engine 
     public Rigidbody carModel;      // To be populated with the car's art in-engine 
+    public Rigidbody camObj;     // 
     public Transform playerTr;      // To be populated with the car's art in-engine... We're using it as a kind of compass to know where to apply force. 
     public float speed = 10;        // How fast the car can go. Set with an initial value, but can be changed in-engine. 
     public int howMuchCanTurn = 50; // How much we can allow the car to turn. Set with an initial value, but can be changed in-engine. 
@@ -72,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
             rotRightVeloc--;                                            // Decrement rotRightVeloc 
             lastAccel = 3;                                              // Set the lastAccel to 3 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
+            camObj.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);
             ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
@@ -89,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
             rotLeftVeloc--;                                             // Decrement rotLeftVeloc 
             lastAccel = 4;                                              // Set the lastAccel to 4 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
+            camObj.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);
             ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
 
@@ -124,6 +127,7 @@ public class PlayerMovement : MonoBehaviour
             rotRightVeloc--;                                            // Decrement rotRightVeloc 
             lastAccel = 3;                                              // Set the lastAccel to 3 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
+            camObj.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);
             ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
@@ -141,6 +145,7 @@ public class PlayerMovement : MonoBehaviour
             rotLeftVeloc--;                                             // Decrement rotLeftVeloc 
             lastAccel = 4;                                              // Set the lastAccel to 4 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
+            camObj.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);
             ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
@@ -162,10 +167,12 @@ public class PlayerMovement : MonoBehaviour
             if (lastAccel == 3 )                                        // if lastAccel is 3
             {
                 carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // rotate the car in the direction it was just being rotated as fast as rotLeftVeloc's value 
+                camObj.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);
             }
             if (lastAccel == 4 )                                        // if lastAccel is 4 
             {
                 carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // rotate the car in the direction it was just being rotated as fast as rotRightVeloc's value 
+                camObj.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);
             }
             
             if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
