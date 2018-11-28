@@ -51,8 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Finish LIne copy\FinishLine1.cs" />
-     <Compile Include="Assets\Scripts\Finish LIne copy\Halfwaypoint.cs" />
+     <Compile Include="Assets\LapSystem\Finish LIne copy\FinishLine1.cs" />
+     <Compile Include="Assets\LapSystem\Finish LIne copy\Halfwaypoint.cs" />
      <Compile Include="Assets\Scripts\Player Movement\CameraMovement.cs" />
      <Compile Include="Assets\Scripts\Player Movement\CarModelMovement.cs" />
      <Compile Include="Assets\Scripts\Player Movement\PlayerMovement.cs" />
@@ -230,6 +230,10 @@
  <Reference Include="UnityEngine.StandardEvents">
  <HintPath>/Users/Masterdylan/Library/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{D26A69BB-4EA6-E3A3-0D9E-0EC1440086D3}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
