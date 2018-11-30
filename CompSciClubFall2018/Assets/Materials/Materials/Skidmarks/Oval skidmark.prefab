@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4493701074078018}
   - component: {fileID: 33486322300801250}
+  - component: {fileID: 114018589235196940}
   - component: {fileID: 136640908974343922}
   - component: {fileID: 23818191223932638}
-  - component: {fileID: 114018589235196940}
   m_Layer: 0
   m_Name: Oval skidmark
   m_TagString: Oval Skidmark
