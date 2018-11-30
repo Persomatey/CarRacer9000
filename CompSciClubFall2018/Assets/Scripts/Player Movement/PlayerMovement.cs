@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public float slidyness = 2;     // How much the car maintains lateral momentum when sliding
     public float driftyness = 5;    // works similar to slidyness. driftyness should be greater than slidyness
     public float frictionSpeedThreshold = 5; // How fast before the car starts to slide
+    public float skidmarkThreshold = .5f;  //activates the skidmarks
     private float velocOfRight;     // The velocity the car is moving to the right of the car 
     private float velocOfLeft;      // The velocity the car is moving to the left of the car 
     private int lastAccel = 0;      // The ylast direction the car was going in 
@@ -29,8 +30,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isA;               // We'll set this bool to if the A key being hit soon 
     private bool isS;               // We'll set this bool to if the S key being hit soon 
     private bool isD;               // We'll set this bool to if the D key being hit soon
-    private bool isSpace;           // We'll set this bool if the Space(handbrake) is pressed
-
+    public bool isSpace;           // We'll set this bool if the Space(handbrake) is pressed
+    private bool isSliding;
     public float debugVelocity;
 
     private void FixedUpdate()                                          // This function will be called every frame. 
@@ -38,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         velocOfRight = Vector3.Dot(ballRB.velocity, playerTr.right);    // Setting velocOfRight to whatever the velocity is to the right of the player 
         velocOfLeft = Vector3.Dot(ballRB.velocity, -playerTr.right);    // Setting velocOfLeft to whatever the velocity is to the left of the player 
 
+        //isSliding = false;                                              // Reset 
         debugVelocity = ballRB.velocity.magnitude;
 
         if (Input.GetKey("w"))                                          // If the W key is being pressed... 
@@ -201,10 +203,21 @@ public class PlayerMovement : MonoBehaviour
         {  rotLeftVeloc = howMuchCanTurn; }
         if (rotLeftVeloc < 0)                   // Every frame, make sure that rotLeftVeloc's value can't be less than 0. 
         { rotLeftVeloc = 0; }
+
+        //activating slide marks based on a percentage threshold of howMuchCanTurn
+        if (( (rotRightVeloc > howMuchCanTurn * skidmarkThreshold || rotLeftVeloc > howMuchCanTurn * skidmarkThreshold) && ballRB.velocity.magnitude > frictionSpeedThreshold ) || isSliding)
+        {
+            isSliding = true;
+        }
+        else isSliding = false;
+
     }
 
     public void handleSliding(bool handbrake)
     {
+
+
+        isSliding = false;                       // signals the Skidmark.cs to spawn skidmarks
         if (!handbrake)                         // If the handbrake is not held down, the car will turn normally with normal slidyness
         {
             if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
@@ -233,14 +246,22 @@ public class PlayerMovement : MonoBehaviour
 
         else                                               // if handbrake is held down
         {
+            //isSliding = true;
             if (velocOfRight != 0)                                      // If the car is drifting to the right at all, 
             {     
                     ballRB.AddForce(-playerTr.right * velocOfRight / driftyness);
+                    isSliding = true;
             }
             if (velocOfLeft != 0)                                       // If the car is drifting to the left at all, 
             {
                     ballRB.AddForce(playerTr.right * velocOfLeft / driftyness);
+                    isSliding = true;
             }
         }
+    }
+
+    public bool getIsSliding()
+    {
+        return isSliding;
     }
 }
