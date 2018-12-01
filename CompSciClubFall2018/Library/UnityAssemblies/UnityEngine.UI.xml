@@ -151,6 +151,11 @@
         <para>The current BaseInput being used by the input module.</para>
       </summary>
     </member>
+    <member name="P:UnityEngine.EventSystems.BaseInputModule.inputOverride">
+      <summary>
+        <para>Used to override the default BaseInput for the input module.</para>
+      </summary>
+    </member>
     <member name="M:UnityEngine.EventSystems.BaseInputModule.ActivateModule">
       <summary>
         <para>Called when the module is activated. Override this if you want custom code to execute when you activate your module.</para>
@@ -1908,7 +1913,7 @@
     <member name="F:UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize">
       <summary>
         <para>Using the Scale With Screen Size mode, positions and sizes can be specified according to the pixels of a specified reference resolution.
-If the current screen resolution is larger then the reference resolution, the Canvas will keep having only the resolution of the reference resolution, but will scale up in order to fit the screen. If the current screen resolution is smaller than the reference resolution, the Canvas will similarly be scaled down to fit.</para>
+If the current screen resolution is larger than the reference resolution, the Canvas will keep having only the resolution of the reference resolution, but will scale up in order to fit the screen. If the current screen resolution is smaller than the reference resolution, the Canvas will similarly be scaled down to fit.</para>
       </summary>
     </member>
     <member name="T:UnityEngine.UI.CanvasScaler.ScreenMatchMode">
@@ -3817,6 +3822,11 @@ A placeholder graphic can be used to show subtle hints or make it more obvious t
     <member name="P:UnityEngine.UI.InputField.textComponent">
       <summary>
         <para>The Text component that is going to be used to render the text to screen.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.UI.InputField.touchScreenKeyboard">
+      <summary>
+        <para>The TouchScreenKeyboard being used to edit the Input Field.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.UI.InputField.wasCanceled">

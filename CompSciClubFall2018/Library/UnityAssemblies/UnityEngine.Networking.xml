@@ -264,6 +264,301 @@
         <para>The QoS channel to use to send this command on, see Networking.QosType.</para>
       </summary>
     </member>
+    <member name="?:UnityEngine.Networking.INetworkTransport">
+      <summary>
+        <para>The network transport interface that is required by Unity's high-level Multiplayer API.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.AddHost(UnityEngine.Networking.HostTopology,System.Int32,System.String)">
+      <summary>
+        <para>Creates a host based on Networking.HostTopology.</para>
+      </summary>
+      <param name="topology">The Networking.HostTopology associated with the host.</param>
+      <param name="port">Port to bind to. When set to 0, the operating system chooses a port at random.</param>
+      <param name="ip">IP address to bind to or null to bind to first available address.</param>
+      <returns>
+        <para>Returns the ID of the new host.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.AddHostWithSimulator(UnityEngine.Networking.HostTopology,System.Int32,System.Int32,System.Int32)">
+      <summary>
+        <para>Creates a host and configures it to simulate Internet latency (works on Editor and development builds only).</para>
+      </summary>
+      <param name="topology">The Networking.HostTopology associated with the host.</param>
+      <param name="minTimeout">Minimum simulated delay in milliseconds.</param>
+      <param name="maxTimeout">Maximum simulated delay in milliseconds.</param>
+      <param name="port">Port to bind to. When set to 0, the operating system chooses a port at random.</param>
+      <returns>
+        <para>Returns the ID of the new host.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.AddWebsocketHost(UnityEngine.Networking.HostTopology,System.Int32,System.String)">
+      <summary>
+        <para>Creates a web socket host.</para>
+      </summary>
+      <param name="topology">The Networking.HostTopology associated with the host.</param>
+      <param name="ip">IP address to bind to.</param>
+      <param name="port">Port to bind to.</param>
+      <returns>
+        <para>Web socket host id.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.Connect(System.Int32,System.String,System.Int32,System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Tries to establish a connection to another peer.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection (retrieved when calling Networking.NetworkTransport.AddHost).</param>
+      <param name="address">IPv4 address of the other peer.</param>
+      <param name="port">Port of the other peer.</param>
+      <param name="specialConnectionId">ID of a connection previously set up by calling Networking.HostTopology.AddSpecialConnectionConfig to be used to connect with.Set to 0 to use a default connection instead.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>A unique connection identifier on success (otherwise zero).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.ConnectAsNetworkHost(System.Int32,System.String,System.Int32,UnityEngine.Networking.Types.NetworkID,UnityEngine.Networking.Types.SourceID,UnityEngine.Networking.Types.NodeID,System.Byte&amp;)">
+      <summary>
+        <para>Creates a dedicated connection to Relay server.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection. Retrieved when calling Networking.NetworkTransport.AddHost.</param>
+      <param name="address">IPv4 address of the relay.</param>
+      <param name="port">Port of the relay.</param>
+      <param name="network">GUID for the relay match, retrieved by calling Networking.Match.NetworkMatch.CreateMatch and using the Networking.Match.MatchInfo.networkId.</param>
+      <param name="source">GUID for the source, can be retrieved by calling Utility.GetSourceID.</param>
+      <param name="node">Slot ID for this user, retrieved by calling Networking.Match.NetworkMatch.CreateMatch and using the Networking.Match.MatchInfo.nodeId.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.ConnectEndPoint(System.Int32,System.Net.EndPoint,System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Tries to establish a connection to the peer specified by the given C# System.EndPoint.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection. Retrieved when calling Networking.NetworkTransport.AddHost.</param>
+      <param name="endPoint">The EndPoint object describing the other peer.</param>
+      <param name="specialConnectionId">ID of a connection previously set up by calling Networking.HostTopology.AddSpecialConnectionConfig to be used to connect with.Set to 0 to use a default connection instead.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>A unique connection identifier on success (otherwise zero).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.ConnectToNetworkPeer(System.Int32,System.String,System.Int32,System.Int32,System.Int32,UnityEngine.Networking.Types.NetworkID,UnityEngine.Networking.Types.SourceID,UnityEngine.Networking.Types.NodeID,System.Byte&amp;)">
+      <summary>
+        <para>Creates a connection to another peer in the Relay group.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection. Retrieved when calling Networking.NetworkTransport.AddHost.</param>
+      <param name="address">IP address of the peer, retrieved by calling Networking.Match.NetworkMatch.JoinMatch and using the Networking.Match.MatchInfo.address.</param>
+      <param name="port">Port of the peer, retrieved by calling Networking.Match.NetworkMatch.JoinMatch and using the Networking.Match.MatchInfo.port.</param>
+      <param name="specialConnectionId">ID of a connection previously set up by calling Networking.HostTopology.AddSpecialConnectionConfig to be used to connect with.Set to 0 to use a default connection instead.</param>
+      <param name="relaySlotId">ID of the remote peer in relay.</param>
+      <param name="network">GUID for the relay match, retrieved by calling Networking.Match.NetworkMatch.JoinMatch and using the Networking.Match.MatchInfo.networkId.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <param name="source">GUID for the source, can be retrieved by calling Utility.GetSourceID.</param>
+      <param name="node">Slot ID reserved for the user, retrieved by calling Networking.Match.NetworkMatch.JoinMatch and using the Networking.Match.MatchInfo.nodeId.</param>
+      <returns>
+        <para>A unique connection identifier on success (otherwise zero).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.ConnectWithSimulator(System.Int32,System.String,System.Int32,System.Int32,System.Byte&amp;,UnityEngine.Networking.ConnectionSimulatorConfig)">
+      <summary>
+        <para>Tries to establish a connection to another peer with added simulated latency.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection (Retrieved when calling Networking.NetworkTransport.AddHost).</param>
+      <param name="address">IPv4 address of the other peer.</param>
+      <param name="port">Port of the other peer.</param>
+      <param name="specialConnectionId">ID of a connection previously set up by calling Networking.HostTopology.AddSpecialConnectionConfig to be used to connect with.Set to 0 to use a default connection instead.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <param name="conf">A Networking.ConnectionSimulatorConfig defined for this connection.</param>
+      <returns>
+        <para>A unique connection identifier on success (otherwise zero).</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.Disconnect(System.Int32,System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Sends a disconnect signal to the connected peer and closes the connection.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection.</param>
+      <param name="connectionId">The connection ID of the connection you want to close.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>True if the disconnect packet was successfully queued for sending.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.DoesEndPointUsePlatformProtocols(System.Net.EndPoint)">
+      <summary>
+        <para>Checks whether the specified end point uses platform-specific protocols.</para>
+      </summary>
+      <param name="endPoint">End point object to check.</param>
+      <returns>
+        <para>True if platform-specific protocols are used.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.GetBroadcastConnectionInfo(System.Int32,System.String&amp;,System.Int32&amp;,System.Byte&amp;)">
+      <summary>
+        <para>After Networking.INetworkTransport.Receive() returns a Networking.NetworkEventType.BroadcastEvent, this function returns the connection information of the broadcast sender. This information can then be used for connecting to the broadcast sender.</para>
+      </summary>
+      <param name="hostId">ID of the broadcast receiver.</param>
+      <param name="address">IPv4 address of broadcast sender.</param>
+      <param name="port">Port of broadcast sender.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.GetBroadcastConnectionMessage(System.Int32,System.Byte[],System.Int32,System.Int32&amp;,System.Byte&amp;)">
+      <summary>
+        <para>After Networking.INetworkTransport.Receive() returns Networking.NetworkEventType.BroadcastEvent, this function returns a complimentary message from the broadcast sender.</para>
+      </summary>
+      <param name="hostId">ID of broadcast receiver.</param>
+      <param name="buffer">Message buffer provided by caller.</param>
+      <param name="bufferSize">Buffer size.</param>
+      <param name="receivedSize">Received size (if received size &gt; bufferSize, corresponding error will be set).</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.GetConnectionInfo(System.Int32,System.Int32,System.String&amp;,System.Int32&amp;,UnityEngine.Networking.Types.NetworkID&amp;,UnityEngine.Networking.Types.NodeID&amp;,System.Byte&amp;)">
+      <summary>
+        <para>Returns the connection parameters for the specified connectionId. These parameters can be sent to other users to establish a direct connection to this peer. If this peer is connected to the host via Relay, the Relay-related parameters are set.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection.</param>
+      <param name="connectionId">ID of this connection.</param>
+      <param name="address">The IP address of the specified connection.</param>
+      <param name="port">The port of the specified connection.</param>
+      <param name="network">Relay network GUID of the specified connection if any.</param>
+      <param name="dstNode">Destination slot ID of the specified connection.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.GetCurrentRTT(System.Int32,System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Return the round trip time for the given connectionId.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection.</param>
+      <param name="connectionId">ID of the connection.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>Current round trip time in milliseconds.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.Init">
+      <summary>
+        <para>Initializes the object implementing INetworkTransport. Must be called before doing any other operations on the object.</para>
+      </summary>
+      <param name="config">Global config object to use for initialization.</param>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.Init(UnityEngine.Networking.GlobalConfig)">
+      <summary>
+        <para>Initializes the object implementing INetworkTransport. Must be called before doing any other operations on the object.</para>
+      </summary>
+      <param name="config">Global config object to use for initialization.</param>
+    </member>
+    <member name="P:UnityEngine.Networking.INetworkTransport.IsStarted">
+      <summary>
+        <para>True if the object has been initialized and is ready to be used.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.Receive(System.Int32&amp;,System.Int32&amp;,System.Int32&amp;,System.Byte[],System.Int32,System.Int32&amp;,System.Byte&amp;)">
+      <summary>
+        <para>Polls the underlying system for events.</para>
+      </summary>
+      <param name="hostId">The host ID to check for events.</param>
+      <param name="connectionId">The connection ID that received the event.</param>
+      <param name="channelId">The channel ID associated with the event.</param>
+      <param name="buffer">The buffer that will hold the data received.</param>
+      <param name="bufferSize">Size of the buffer supplied.</param>
+      <param name="receivedSize">The actual receive size of the data.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>Type of event returned.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.ReceiveFromHost(System.Int32,System.Int32&amp;,System.Int32&amp;,System.Byte[],System.Int32,System.Int32&amp;,System.Byte&amp;)">
+      <summary>
+        <para>Similar to Networking.INetworkTransport.Receive but will only poll for the provided hostId.</para>
+      </summary>
+      <param name="hostId">The host ID to check for events.</param>
+      <param name="connectionId">The connection ID that received the event.</param>
+      <param name="channelId">The channel ID associated with the event.</param>
+      <param name="buffer">The buffer that will hold the data received.</param>
+      <param name="bufferSize">Size of the buffer supplied.</param>
+      <param name="receivedSize">The actual receive size of the data.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>Type of event returned.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.ReceiveRelayEventFromHost(System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Polls the host for the following events: Networking.NetworkEventType.ConnectEvent and Networking.NetworkEventType.DisconnectEvent.</para>
+      </summary>
+      <param name="hostId">The host ID to check for events.</param>
+      <param name="error">Error code(can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>Type of event returned.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.RemoveHost(System.Int32)">
+      <summary>
+        <para>Closes the opened transport pipe, and closes all connections belonging to that transport pipe.</para>
+      </summary>
+      <param name="hostId">Host ID to remove.</param>
+      <returns>
+        <para>True if the transport pipe to the host has been successfully closed.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.Send(System.Int32,System.Int32,System.Int32,System.Byte[],System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Sends data to peer with the given connection ID.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this connection.</param>
+      <param name="connectionId">ID of the connection.</param>
+      <param name="channelId">The channel ID to send on.</param>
+      <param name="buffer">Buffer containing the data to send.</param>
+      <param name="size">Size of the buffer.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>True if data was successfully sent or queued for sending.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.SetBroadcastCredentials(System.Int32,System.Int32,System.Int32,System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Sets the credentials required for receiving broadcast messages. If the credentials of a received broadcast message do not match, that broadcast discovery message is dropped.</para>
+      </summary>
+      <param name="hostId">Host ID associated with this broadcast.</param>
+      <param name="key">Key part of the credentials associated with this broadcast.</param>
+      <param name="version">Version part of the credentials associated with this broadcast.</param>
+      <param name="subversion">Subversion part of the credentials associated with this broadcast.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.SetPacketStat(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>
+        <para>Keeps track of network packet statistics.</para>
+      </summary>
+      <param name="direction">Whether the packet is outgoing (-1) or incoming (0).</param>
+      <param name="packetStatId">The ID of the message being reported.</param>
+      <param name="numMsgs">Number of messages being reported.</param>
+      <param name="numBytes">Number of bytes used by reported messages.</param>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.Shutdown">
+      <summary>
+        <para>Shuts down the transport object.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.StartBroadcastDiscovery(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32,System.Byte&amp;)">
+      <summary>
+        <para>Starts sending a broadcasting message across all local subnets.</para>
+      </summary>
+      <param name="hostId">Host ID which should be reported via broadcast (broadcast receivers will connect to this host).</param>
+      <param name="broadcastPort">Port used for the broadcast message.</param>
+      <param name="key">Key part of the credentials associated with this broadcast.</param>
+      <param name="version">Version part of the credentials associated with this broadcast.</param>
+      <param name="subversion">Subversion part of the credentials associated with this broadcast.</param>
+      <param name="buffer">Complimentary message. This message will delivered to the receiver with the broadcast event.</param>
+      <param name="size">Size of message.</param>
+      <param name="timeout">Specifies how often the broadcast message should be sent in milliseconds.</param>
+      <param name="error">Error code (can be cast to Networking.NetworkError for more information).</param>
+      <returns>
+        <para>Return true if broadcasting request has been submitted.</para>
+      </returns>
+    </member>
+    <member name="M:UnityEngine.Networking.INetworkTransport.StopBroadcastDiscovery">
+      <summary>
+        <para>Stops sending the broadcast discovery message across all local subnets.</para>
+      </summary>
+    </member>
     <member name="T:UnityEngine.Networking.LogFilter">
       <summary>
         <para>FilterLog is a utility class that controls the level of logging generated by UNET clients and servers.</para>
@@ -1945,6 +2240,11 @@
         <para>The NetworkManager is a convenience class for the HLAPI for managing networking systems.</para>
       </summary>
     </member>
+    <member name="P:UnityEngine.Networking.NetworkManager.activeTransport">
+      <summary>
+        <para>The currently active instance of an INetworkTransport object that is being used by the high level API of Unity Multiplayer to send and receive data.</para>
+      </summary>
+    </member>
     <member name="P:UnityEngine.Networking.NetworkManager.autoCreatePlayer">
       <summary>
         <para>A flag to control whether or not player objects are automatically created on connect, and on scene change.</para>
@@ -1973,6 +2273,11 @@
     <member name="P:UnityEngine.Networking.NetworkManager.customConfig">
       <summary>
         <para>Flag to enable custom network configuration.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.Networking.NetworkManager.defaultTransport">
+      <summary>
+        <para>The high level API's default network transport class.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Networking.NetworkManager.dontDestroyOnLoad">
