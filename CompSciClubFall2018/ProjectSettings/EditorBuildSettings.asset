@@ -9,9 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: e33c27fb356c0dd41a42913350812151
   - enabled: 1
+    path: Assets/Scenes/Track.unity
+    guid: 98c03432319468b49bcc5f2cea207e36
+  - enabled: 1
     path: Assets/Scenes/Hunter-Track1.unity
     guid: fc91df6538137f44487563e4c4db8882
   - enabled: 1
     path: Assets/Scenes/Hunter-Track2.unity
     guid: 829f64c93dc41494faa9fb2c0af78477
-  m_configObjects: {}
