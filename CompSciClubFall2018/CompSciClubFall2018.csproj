@@ -243,14 +243,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\LapSystem\Finish LIne copy\FinishLine1.cs" />
-    <Compile Include="Assets\Scripts\LapSystem\Finish LIne copy\Halfwaypoint.cs" />
+    <Compile Include="Assets\Scripts\Lap System\FinishLine1.cs" />
+    <Compile Include="Assets\Scripts\Lap System\Halfwaypoint.cs" />
+    <Compile Include="Assets\Scripts\Main.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Player Movement\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\Player Movement\CarModelMovement.cs" />
     <Compile Include="Assets\Scripts\Player Movement\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Skidmarks.cs" />
     <Compile Include="Assets\Scripts\SkidmarkTimer.cs" />
+    <Compile Include="Assets\Scripts\Track2Menu.cs" />
+    <Compile Include="Assets\Scripts\TrackMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />

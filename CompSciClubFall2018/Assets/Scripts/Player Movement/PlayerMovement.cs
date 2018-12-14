@@ -1,7 +1,7 @@
 ﻿/*
  * Programmer:   Hunter Goodin 
  * Date Created: 09/24/2018 @  9:40 PM 
- * Last Updated: 09/27/2018 @  1:30 PM by Hunter Goodin
+ * Last Updated: 12/13/2018 @  7:15 PM by Hunter Goodin
  * File Name:    PlayerMovement.cs 
  * Description:  This script will be responsible for the player's core movement. 
  */
@@ -16,14 +16,14 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody carModel;      // To be populated with the car's art in-engine 
     public Rigidbody camera; 
     public Transform playerTr;      // To be populated with the car's art in-engine... We're using it as a kind of compass to know where to apply force. 
-    public float speed = 10;        // How fast the car can go. Set with an initial value, but can be changed in-engine. 
+    public float curSpeed = 10;        // How fast the car can go. Set with an initial value, but can be changed in-engine. 
     public int howMuchCanTurn = 50; // How much we can allow the car to turn. Set with an initial value, but can be changed in-engine. 
     private int rotRightVeloc = 0;  // How fast the car is turning to the right. 
     private int rotLeftVeloc = 0;   // How fast the car is turning to the left. 
-    public float slidyness = 2;     // How much the car maintains lateral momentum when sliding
-    public float driftyness = 5;    // works similar to slidyness. driftyness should be greater than slidyness
-    public float frictionSpeedThreshold = 5; // How fast before the car starts to slide
-    public float skidmarkThreshold = .5f;  //activates the skidmarks
+    public float slidyness = 2;                 // How much the car maintains lateral momentum when sliding
+    public float driftyness = 5;                // works similar to slidyness. driftyness should be greater than slidyness
+    public float frictionSpeedThreshold = 5;    // How fast before the car starts to slide
+    public float skidmarkThreshold = .5f;       //activates the skidmarks
     private float velocOfRight;     // The velocity the car is moving to the right of the car 
     private float velocOfLeft;      // The velocity the car is moving to the left of the car 
     private int lastAccel = 0;      // The ylast direction the car was going in 
@@ -33,15 +33,59 @@ public class PlayerMovement : MonoBehaviour
     private bool isD;               // We'll set this bool to if the D key being hit soon
     public bool isSpace;           // We'll set this bool if the Space(handbrake) is pressed
     private bool isSliding;
-    public float debugVelocity;
+    public Vector3 debugVelocity;
+    public float grassMod = 1.0f;
+    public Collision colTrack;
+    public bool isGrass = false;
+
+    public bool toggle = false; 
+
+    private void OnCollisionStay(Collision col)
+    {
+        colTrack = col; 
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Track")
+        {
+            isGrass = false;
+        }
+        else if (col.gameObject.tag == "Grass")
+        {
+            isGrass = true;
+            ballRB.velocity = debugVelocity / 4;
+        }
+    }
 
     private void FixedUpdate()                                          // This function will be called every frame. 
     {
+        debugVelocity = ballRB.velocity;
+
+        if (colTrack.gameObject.tag == "Track")
+        {
+            isGrass = false; 
+        }
+        else if (colTrack.gameObject.tag == "Grass")
+        {
+            isGrass = true; 
+        }
+
+        if (isGrass == false)
+        {
+            curSpeed = 10; 
+        }
+        else if (isGrass == true)
+        {
+            curSpeed = 8; 
+        }
+
+        // curSpeed = baseSpeed * grassMod; 
+
         velocOfRight = Vector3.Dot(ballRB.velocity, playerTr.right);    // Setting velocOfRight to whatever the velocity is to the right of the player 
         velocOfLeft = Vector3.Dot(ballRB.velocity, -playerTr.right);    // Setting velocOfLeft to whatever the velocity is to the left of the player 
 
         //isSliding = false;                                              // Reset 
-        debugVelocity = ballRB.velocity.magnitude;
 
         if (Input.GetKey("w"))                                          // If the W key is being pressed... 
         { isW = true; }                                                 // Set isW to true 
@@ -69,11 +113,11 @@ public class PlayerMovement : MonoBehaviour
             rotRightVeloc--;                                            // Decrement rotRightVeloc 
             rotLeftVeloc--;                                             // Decrement rotLeftVeloc 
             lastAccel = 1;                                              // Set the lastAccel to 1 (this will come into play if no keys are being hit) 
-            ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+
+            ballRB.AddForce(playerTr.forward * curSpeed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             handleSliding(isSpace);
         }
-
 
         else if (isW == true && isA == true && isSpace == true)         //if (forward and left and handbrake), run handbraking drift turn
         {
@@ -82,7 +126,7 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 3;                                              // Set the lastAccel to 3 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
             camera.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);
-            ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+            ballRB.AddForce(playerTr.forward * curSpeed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             handleSliding(isSpace);
         }
@@ -106,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 4;                                              // Set the lastAccel to 4 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
             camera.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);
-            ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+            ballRB.AddForce(playerTr.forward * curSpeed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             handleSliding(isSpace);
         }
@@ -130,7 +174,7 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 3;                                              // Set the lastAccel to 3 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
             camera.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);
-            ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+            ballRB.AddForce(playerTr.forward * curSpeed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             handleSliding(isSpace);
         }
@@ -141,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
             lastAccel = 4;                                              // Set the lastAccel to 4 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
             camera.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);
-            ballRB.AddForce(playerTr.forward * speed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+            ballRB.AddForce(playerTr.forward * curSpeed);                  // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
 
 
@@ -152,29 +196,29 @@ public class PlayerMovement : MonoBehaviour
             rotRightVeloc--;                                            // Decrement rotRightVeloc 
             rotLeftVeloc--;                                             // Decrement rotLeftVeloc 
             lastAccel = 2;                                              // Set the lastAccel to 2 (this will come into play if no keys are being hit) 
-            ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+            ballRB.AddForce(-playerTr.forward * curSpeed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             handleSliding(isSpace);
         }
-        else if ( isS == true && isA == true)                    // If isS is true and isA is true (backward and left), run this code 
+        else if ( isS == true && isD == true)                    // If isS is true and isA is true (backward and left), run this code 
         {
             rotLeftVeloc++;                                             // Increment rotLeftVeloc 
             rotRightVeloc--;                                            // Decrement rotRightVeloc 
             lastAccel = 3;                                              // Set the lastAccel to 3 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);    // Rotate out car's art to the left as fast as rotLeftVeloc's value 
             camera.transform.Rotate(Vector3.down * Time.deltaTime * rotLeftVeloc);
-            ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+            ballRB.AddForce(-playerTr.forward * curSpeed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             handleSliding(isSpace);
         }
-        else if ( isS == true && isD == true)                   // If isS is true and isD is true (backward and Right), run this code 
+        else if ( isS == true && isA == true)                   // If isS is true and isD is true (backward and Right), run this code 
         {
             rotRightVeloc++;                                            // Increment rotRightVeloc 
             rotLeftVeloc--;                                             // Decrement rotLeftVeloc 
             lastAccel = 4;                                              // Set the lastAccel to 4 (this will come into play if no keys are being hit) 
             carModel.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);     // Rotate out car's art to the right as fast as rotRightVeloc's value 
             camera.transform.Rotate(Vector3.up * Time.deltaTime * rotRightVeloc);
-            ballRB.AddForce(-playerTr.forward * speed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
+            ballRB.AddForce(-playerTr.forward * curSpeed);                 // Move in the direction of the car's art (see, we're using the car's art as a sort of compass) 
 
             handleSliding(isSpace);
         }
@@ -226,8 +270,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void handleSliding(bool handbrake)
     {
-
-
         isSliding = false;                       // signals the Skidmark.cs to spawn skidmarks
         if (!handbrake)                         // If the handbrake is not held down, the car will turn normally with normal slidyness
         {
